@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal Copa do Mundo FIFA 2026 – Agenda, Grupos & Estádios</title>
+<meta name="description" content="Portal completo da Copa do Mundo FIFA 2026. Adicione os 104 jogos à sua agenda, simule a competição, crie bolões e muito mais.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root {
+  --verde:   #00A651;
+  --verde2:  #007A3D;
+  --verde3:  #00D46A;
+  --ouro:    #FFD700;
+  --azul:    #003DA5;
+  --texto:   #94A3B8;
+  --branco:  #FFFFFF;
+  --vermelho:#EF4444;
+  --amarelo: #F59E0B;
+}
+[data-theme="dark"] {
+  --dark:        #060E1F;
+  --card:        #0C1A35;
+  --card2:       #0F2040;
+  --borda:       rgba(0,166,81,0.25);
+  --text1:       #FFFFFF;
+  --text2:       #94A3B8;
+  --row-alt:     rgba(255,255,255,0.03);
+  --toggle-bg:   rgba(255,255,255,0.08);
+  --input-bg:    rgba(255,255,255,0.06);
+  --input-border:rgba(255,255,255,0.1);
+  --tab-active:  rgba(0,166,81,0.15);
+  --shadow:      rgba(0,0,0,0.5);
+  --overlay:     rgba(6,14,31,0.92);
+}
+[data-theme="light"] {
+  --dark:        #EEF2F7;
+  --card:        #FFFFFF;
+  --card2:       #F8FAFC;
+  --borda:       rgba(0,120,60,0.2);
+  --text1:       #0F172A;
+  --text2:       #64748B;
+  --row-alt:     rgba(0,0,0,0.025);
+  --toggle-bg:   rgba(0,0,0,0.07);
+  --input-bg:    rgba(0,0,0,0.04);
+  --input-border:rgba(0,0,0,0.12);
+  --tab-active:  rgba(0,166,81,0.12);
+  --shadow:      rgba(0,0,0,0.15);
+  --overlay:     rgba(238,242,247,0.95);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--dark);color:var(--text1);
+  font-family:'Barlow',sans-serif;min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;
+  padding:20px 16px 60px;overflow-x:hidden;position:relative;
+  transition:background .3s,color .3s;
+}
+.bg-field{
+  position:fixed;inset:0;z-index:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(0,100,40,.12) 0%,transparent 70%),
+    repeating-linear-gradient(0deg,transparent,transparent 60px,rgba(0,120,50,.04) 60px,rgba(0,120,50,.04) 120px),
+    repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(0,120,50,.025) 60px,rgba(0,120,50,.025) 120px);
+  pointer-events:none;transition:opacity .3s;
+}
+[data-theme="light"] .bg-field{opacity:.4}
+.wrapper{position:relative;z-index:1;width:100%;max-width:700px;display:flex;flex-direction:column;align-items:center}
+
+/* ── THEME TOGGLE ── */
+.theme-toggle{
+  position:fixed;top:16px;right:16px;z-index:200;
+  background:var(--toggle-bg);border:1px solid var(--borda);
+  border-radius:50px;padding:7px 12px;cursor:pointer;
+  font-size:1.1rem;transition:background .2s,transform .15s;
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+.theme-toggle:hover{transform:scale(1.08)}
+
+/* ── HEADER ── */
+.header{width:100%;text-align:center;padding:0 0 24px}
+.flag-strip{display:flex;justify-content:center;gap:7px;margin-bottom:18px;flex-wrap:wrap}
+.flag{font-size:22px;filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))}
+.year-badge{
+  display:inline-block;
+  background:linear-gradient(135deg,var(--ouro),#FFA500);
+  color:#000;font-family:'Bebas Neue',sans-serif;
+  font-size:.85rem;letter-spacing:.2em;
+  padding:4px 14px;border-radius:20px;margin-bottom:12px;
+}
+h1{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2.4rem,9vw,3.8rem);
+  letter-spacing:.03em;line-height:.95;
+  color:var(--text1);margin-bottom:10px;
+  text-shadow:0 0 40px rgba(0,166,81,.25);
+}
+h1 span{
+  display:block;
+  background:linear-gradient(90deg,var(--verde) 0%,var(--verde3) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.tagline{color:var(--text2);font-size:.9rem;line-height:1.5}
+
+/* ── COUNTDOWN ── */
+.countdown-wrap{width:100%;margin-bottom:20px}
+.countdown-label{font-size:.65rem;text-transform:uppercase;letter-spacing:.15em;color:var(--text2);text-align:center;margin-bottom:10px}
+.countdown{display:flex;justify-content:center;gap:8px}
+.cd-block{
+  background:var(--card);border:1px solid var(--borda);
+  border-radius:12px;padding:10px 14px;text-align:center;min-width:68px;
+  box-shadow:0 4px 20px var(--shadow);transition:background .3s;
+}
+.cd-num{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--verde);line-height:1;text-shadow:0 0 16px rgba(0,166,81,.5)}
+.cd-lbl{font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text2);margin-top:2px}
+
+/* ── TABS (scrollable) ── */
+.tabs-outer{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;margin-bottom:16px}
+.tabs-outer::-webkit-scrollbar{height:0}
+.tabs{
+  display:flex;gap:4px;background:var(--toggle-bg);
+  border-radius:14px;padding:4px;min-width:max-content;width:100%;
+}
+.tab{
+  flex-shrink:0;background:transparent;border:none;border-radius:10px;
+  padding:10px 14px;font-family:'Barlow',sans-serif;font-size:.78rem;
+  font-weight:600;color:var(--text2);cursor:pointer;
+  transition:background .2s,color .2s;white-space:nowrap;
+}
+.tab.active{background:var(--tab-active);color:var(--verde);border:1px solid rgba(0,166,81,.3)}
+.tab:hover:not(.active){color:var(--text1);background:rgba(255,255,255,.04)}
+
+/* ── PANELS ── */
+.panel{display:none;width:100%}.panel.active{display:block}
+
+/* ── CARD ── */
+.card{
+  width:100%;background:var(--card);border:1px solid var(--borda);
+  border-radius:24px;padding:28px 24px;
+  box-shadow:0 24px 80px var(--shadow),inset 0 1px 0 rgba(255,255,255,.04);
+  position:relative;overflow:hidden;transition:background .3s;margin-bottom:14px;
+}
+.card::before{
+  content:'';position:absolute;top:-80px;right:-80px;
+  width:220px;height:220px;
+  background:radial-gradient(circle,rgba(0,166,81,.1) 0%,transparent 70%);
+  pointer-events:none;
+}
+.card-title{
+  font-family:'Bebas Neue',sans-serif;font-size:1.4rem;
+  letter-spacing:.04em;color:var(--text1);margin-bottom:18px;
+}
+
+/* ── BALL ── */
+.ball-wrap{text-align:center;margin-bottom:20px}
+.ball{display:inline-block;font-size:48px;animation:spin 8s linear infinite,bounce 2s ease-in-out infinite;filter:drop-shadow(0 8px 20px rgba(0,0,0,.35))}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes bounce{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-10px) rotate(180deg)}}
+
+/* ── STATS GRID ── */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.06);border-radius:14px;overflow:hidden;margin-bottom:20px}
+[data-theme="light"] .stats{background:rgba(0,0,0,.06)}
+.stat{background:var(--card2);padding:14px 8px;text-align:center;transition:background .3s}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--verde);line-height:1;text-shadow:0 0 16px rgba(0,166,81,.4)}
+.stat-lbl{font-size:.62rem;text-transform:uppercase;letter-spacing:.07em;color:var(--text2);margin-top:3px}
+
+/* ── FILTER BRASIL ── */
+.filter-wrap{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  margin-bottom:18px;background:var(--input-bg);border:1px solid var(--input-border);
+  border-radius:12px;padding:12px 16px;cursor:pointer;
+  transition:border-color .2s,background .2s;user-select:none;
+}
+.filter-wrap:hover{border-color:rgba(0,166,81,.4)}
+.filter-wrap.active{border-color:var(--verde);background:rgba(0,166,81,.08)}
+.filter-toggle{
+  appearance:none;width:38px;height:22px;background:rgba(255,255,255,.15);
+  border-radius:11px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;
+}
+.filter-toggle:checked{background:var(--verde)}
+.filter-toggle::after{
+  content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;
+  border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,.3);
+}
+.filter-toggle:checked::after{transform:translateX(16px)}
+.filter-label{font-size:.85rem;font-weight:600;color:var(--text1);flex:1}
+.filter-count{font-size:.72rem;color:var(--verde);font-weight:700;background:rgba(0,166,81,.12);padding:2px 8px;border-radius:10px}
+
+/* ── CUSTOM CALENDAR FILTERS ── */
+.cal-filters{margin-bottom:20px}
+.cal-filters-title{font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;color:var(--text2);margin-bottom:10px}
+.cal-filter-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+.cal-filter-item{
+  display:flex;align-items:center;gap:8px;
+  background:var(--input-bg);border:1px solid var(--input-border);
+  border-radius:10px;padding:9px 12px;cursor:pointer;
+  transition:border-color .2s,background .2s;user-select:none;
+}
+.cal-filter-item:hover{border-color:rgba(0,166,81,.4)}
+.cal-filter-item.selected{border-color:var(--verde);background:rgba(0,166,81,.1)}
+.cal-filter-cb{
+  appearance:none;width:16px;height:16px;border:2px solid var(--text2);
+  border-radius:4px;cursor:pointer;flex-shrink:0;position:relative;transition:all .2s;
+}
+.cal-filter-cb:checked{background:var(--verde);border-color:var(--verde)}
+.cal-filter-cb:checked::after{content:'✓';position:absolute;top:-1px;left:1px;font-size:11px;color:#fff;font-weight:700}
+.cal-filter-text{font-size:.8rem;font-weight:500;color:var(--text1)}
+
+/* ── REMINDER OPTIONS ── */
+.reminders-section{margin-bottom:20px}
+.reminders-title{font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;color:var(--text2);margin-bottom:10px}
+.reminders-grid{display:flex;flex-wrap:wrap;gap:7px}
+.reminder-item{
+  display:flex;align-items:center;gap:6px;
+  background:var(--input-bg);border:1px solid var(--input-border);
+  border-radius:20px;padding:6px 12px;cursor:pointer;
+  transition:border-color .2s,background .2s;user-select:none;
+}
+.reminder-item:hover{border-color:rgba(0,166,81,.4)}
+.reminder-item.selected{border-color:var(--ouro);background:rgba(255,215,0,.08)}
+.reminder-cb{appearance:none;width:14px;height:14px;border:2px solid var(--text2);border-radius:3px;cursor:pointer;flex-shrink:0;position:relative;transition:all .2s}
+.reminder-cb:checked{background:var(--ouro);border-color:var(--ouro)}
+.reminder-cb:checked::after{content:'✓';position:absolute;top:-1px;left:0px;font-size:9px;color:#000;font-weight:700}
+.reminder-text{font-size:.78rem;font-weight:500;color:var(--text1)}
+
+/* ── BROADCAST ── */
+.broadcast-title{font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;color:var(--text2);text-align:center;margin-bottom:10px}
+.broadcast-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:20px}
+.bc-item{background:var(--input-bg);border:1px solid var(--input-border);border-radius:10px;padding:8px 6px;text-align:center;transition:background .3s}
+.bc-icon{font-size:1.1rem}.bc-name{display:block;font-size:.68rem;font-weight:600;color:var(--text1);margin-top:3px;line-height:1.2}
+.bc-type{display:block;font-size:.6rem;color:var(--text2);margin-top:1px}
+.bc-free{border-color:rgba(0,166,81,.3);background:rgba(0,166,81,.06)}.bc-free .bc-name{color:#22c55e}
+
+/* ── BUTTON ── */
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:10px;width:100%;
+  background:linear-gradient(135deg,var(--verde) 0%,var(--verde2) 100%);
+  color:var(--branco);font-family:'Barlow',sans-serif;font-size:1rem;
+  font-weight:700;padding:18px 20px;border-radius:14px;border:none;cursor:pointer;
+  letter-spacing:.02em;
+  box-shadow:0 6px 30px rgba(0,166,81,.4),0 1px 0 rgba(255,255,255,.15) inset;
+  transition:transform .18s cubic-bezier(.34,1.56,.64,1),box-shadow .18s;
+  position:relative;overflow:hidden;
+}
+.btn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.12) 0%,transparent 60%);pointer-events:none}
+.btn:hover{transform:translateY(-3px) scale(1.01);box-shadow:0 12px 40px rgba(0,166,81,.5)}
+.btn:active{transform:translateY(0) scale(.99)}
+.btn-icon{font-size:1.2rem;flex-shrink:0}
+.btn-secondary{
+  background:var(--input-bg);color:var(--text1);
+  border:1px solid var(--borda);
+  box-shadow:none;margin-top:10px;
+  font-size:.9rem;padding:13px 16px;
+}
+.btn-secondary:hover{background:rgba(0,166,81,.1);border-color:var(--verde);transform:translateY(-2px) scale(1.005)}
+.btn-gold{background:linear-gradient(135deg,var(--ouro),#FFA500);color:#000;box-shadow:0 6px 30px rgba(255,215,0,.35)}
+.btn-gold:hover{box-shadow:0 12px 40px rgba(255,215,0,.45)}
+
+/* ── NOTE / SUCCESS ── */
+.note{margin-top:14px;font-size:.75rem;color:var(--text2);text-align:center;line-height:1.6}
+.note strong{color:var(--text1);opacity:.8}
+.compat{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:16px}
+.badge{display:flex;align-items:center;gap:5px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:20px;padding:5px 12px;font-size:.7rem;color:var(--text2)}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--verde);box-shadow:0 0 6px var(--verde)}
+.success{
+  display:none;margin-top:16px;background:rgba(0,166,81,.1);
+  border:1px solid rgba(0,166,81,.35);border-radius:12px;
+  padding:14px 16px;font-size:.82rem;color:#86efac;
+  line-height:1.5;text-align:center;
+}
+.success.show{display:block;animation:fadeIn .3s ease}
+
+/* ── TIPS ── */
+.tips{width:100%;background:var(--card2);border:1px solid var(--borda);border-radius:16px;padding:20px 22px;margin-top:12px;transition:background .3s}
+.tips-title{font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;color:var(--text2);margin-bottom:14px}
+.tip{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+.tip:last-child{margin-bottom:0}
+.tip-num{flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--verde2);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:#fff}
+.tip-text{font-size:.8rem;color:var(--text2);line-height:1.4}
+.tip-text strong{color:var(--text1);opacity:.85}
+
+/* ── GROUPS ── */
+.groups-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.groups-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--text1);letter-spacing:.04em}
+.groups-note{font-size:.7rem;color:var(--text2);background:var(--input-bg);border:1px solid var(--input-border);border-radius:8px;padding:4px 10px}
+.group-card{background:var(--card);border:1px solid var(--borda);border-radius:16px;margin-bottom:12px;overflow:hidden;transition:background .3s}
+.group-head{display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(0,166,81,.08);border-bottom:1px solid var(--borda)}
+.group-letter{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--verde);min-width:28px}
+.group-teams-flags{display:flex;gap:4px;font-size:1.1rem}
+.group-table{width:100%;border-collapse:collapse;font-size:.78rem}
+.group-table th{padding:8px 10px;text-align:left;color:var(--text2);font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;font-weight:600;border-bottom:1px solid var(--borda)}
+.group-table th:not(:first-child){text-align:center}
+.group-table td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--text1);vertical-align:middle}
+[data-theme="light"] .group-table td{border-bottom-color:rgba(0,0,0,.05)}
+.group-table tr:last-child td{border-bottom:none}
+.group-table tr:nth-child(even) td{background:var(--row-alt)}
+.team-cell{display:flex;align-items:center;gap:8px}
+.team-flag-sm{font-size:1rem}.team-name{font-weight:500}
+td:not(:first-child){text-align:center;color:var(--text2)}
+.pts{font-weight:700;color:var(--verde)!important;font-size:.85rem}
+.qualify-1{border-left:3px solid var(--verde)}.qualify-2{border-left:3px solid #3B82F6}.qualify-3{border-left:3px solid rgba(255,165,0,.7)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;margin-bottom:20px}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:.7rem;color:var(--text2)}
+.legend-dot{width:10px;height:10px;border-radius:2px}
+
+/* ── CITIES MAP ── */
+.cities-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+@media(max-width:480px){.cities-grid{grid-template-columns:1fr}}
+.city-card{
+  background:var(--card);border:1px solid var(--borda);
+  border-radius:14px;padding:14px;cursor:pointer;
+  transition:border-color .2s,transform .15s,background .3s;
+}
+.city-card:hover{border-color:var(--verde);transform:translateY(-2px)}
+.city-card.active{border-color:var(--verde);background:rgba(0,166,81,.08)}
+.city-flag{font-size:1.4rem;margin-bottom:6px}
+.city-name{font-size:.9rem;font-weight:700;color:var(--text1);margin-bottom:2px}
+.city-country{font-size:.7rem;color:var(--text2)}
+.city-games{font-size:.75rem;color:var(--verde);font-weight:600;margin-top:4px}
+
+/* ── CITY DETAIL MODAL ── */
+.modal-overlay{
+  display:none;position:fixed;inset:0;z-index:300;
+  background:rgba(0,0,0,.7);backdrop-filter:blur(4px);
+  align-items:center;justify-content:center;padding:16px;
+}
+.modal-overlay.open{display:flex}
+.modal{
+  background:var(--card);border:1px solid var(--borda);
+  border-radius:20px;padding:24px;width:100%;max-width:500px;
+  max-height:85vh;overflow-y:auto;position:relative;
+  animation:slideUp .3s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-close{
+  position:absolute;top:14px;right:14px;
+  background:var(--input-bg);border:1px solid var(--input-border);
+  border-radius:50%;width:32px;height:32px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:1rem;
+  color:var(--text2);transition:background .2s;
+}
+.modal-close:hover{background:rgba(0,166,81,.15);color:var(--text1)}
+.modal-stadium-img{width:100%;border-radius:12px;margin-bottom:16px;font-size:4rem;text-align:center;padding:24px;background:rgba(0,166,81,.06);border:1px solid var(--borda)}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--text1);letter-spacing:.03em;margin-bottom:4px}
+.modal-sub{font-size:.8rem;color:var(--text2);margin-bottom:16px}
+.modal-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.modal-stat{background:var(--card2);border-radius:10px;padding:10px;text-align:center}
+.modal-stat-num{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--verde)}
+.modal-stat-lbl{font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text2)}
+.modal-games-list{display:flex;flex-direction:column;gap:6px}
+.modal-game-item{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--input-bg);border-radius:8px;font-size:.78rem}
+.modal-game-title{font-weight:600;color:var(--text1)}
+.modal-game-meta{text-align:right;color:var(--text2);font-size:.7rem}
+
+/* ── STADIUMS ── */
+.stadiums-grid{display:grid;grid-template-columns:1fr;gap:14px}
+.stadium-card{background:var(--card);border:1px solid var(--borda);border-radius:16px;overflow:hidden;cursor:pointer;transition:border-color .2s,transform .15s}
+.stadium-card:hover{border-color:var(--verde);transform:translateY(-2px)}
+.stadium-photo-wrap{width:100%;height:180px;overflow:hidden;background:rgba(0,166,81,.05);border-bottom:1px solid var(--borda);position:relative}
+.stadium-photo{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease}
+.stadium-card:hover .stadium-photo{transform:scale(1.04)}
+.stadium-emoji-fallback{font-size:3.5rem;text-align:center;padding:40px;background:rgba(0,166,81,.05)}
+.stadium-emoji-wrap{width:100%;padding:28px;text-align:center;font-size:3.5rem;background:rgba(0,166,81,.05);border-bottom:1px solid var(--borda)}
+.stadium-info{padding:16px}
+.stadium-name{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--text1);letter-spacing:.03em;margin-bottom:4px}
+.stadium-location{font-size:.78rem;color:var(--text2);margin-bottom:10px}
+.stadium-meta{display:flex;gap:8px;flex-wrap:wrap}
+.stadium-badge{font-size:.68rem;background:var(--card2);border:1px solid var(--borda);border-radius:20px;padding:3px 9px;color:var(--text2)}
+.stadium-badge.highlight{border-color:rgba(0,166,81,.3);color:var(--verde);background:rgba(0,166,81,.07)}
+
+/* ── LIVE STATS ── */
+.live-stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+.live-stat-card{background:var(--card2);border:1px solid var(--borda);border-radius:12px;padding:14px;text-align:center}
+.live-stat-val{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--verde);line-height:1}
+.live-stat-lbl{font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text2);margin-top:4px}
+.live-stat-card.red .live-stat-val{color:var(--vermelho)}
+.live-stat-card.yellow .live-stat-val{color:var(--amarelo)}
+.live-stat-card.blue .live-stat-val{color:#60A5FA}
+
+/* ── FOOTER ── */
+footer{margin-top:32px;font-size:.7rem;color:var(--text2);opacity:.5;text-align:center;position:relative;z-index:1}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:420px){
+  .card{padding:22px 16px}
+  .cd-block{min-width:54px;padding:9px 10px}
+  .cd-num{font-size:1.7rem}
+  .cal-filter-grid{grid-template-columns:1fr}
+  .live-stats-grid{grid-template-columns:1fr}
+}
+/* ── SOBRE ── */
+.sobre-hero{display:flex;align-items:center;gap:18px;padding:24px}
+.sobre-avatar{
+  flex-shrink:0;width:72px;height:72px;border-radius:50%;
+  background:linear-gradient(135deg,var(--verde),var(--azul));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:#fff;
+  box-shadow:0 4px 20px rgba(0,166,81,.4);
+}
+.sobre-dev-name{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:.03em;color:var(--text1);margin-bottom:4px}
+.sobre-dev-role{font-size:.78rem;color:var(--text2);margin-bottom:10px;line-height:1.4}
+.sobre-tags{display:flex;gap:6px;flex-wrap:wrap}
+.sobre-tag{font-size:.65rem;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(0,166,81,.12);border:1px solid rgba(0,166,81,.3);color:var(--verde)}
+.sobre-text{font-size:.84rem;color:var(--text2);line-height:1.7;margin-bottom:12px}
+.sobre-text strong{color:var(--text1)}
+.sobre-divider{height:1px;background:var(--borda);margin:20px 0}
+.tech-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px}
+@media(max-width:420px){.tech-grid{grid-template-columns:repeat(2,1fr)}}
+.tech-item{background:var(--card2);border:1px solid var(--borda);border-radius:12px;padding:14px 8px;text-align:center;transition:border-color .2s,transform .15s}
+.tech-item:hover{border-color:var(--verde);transform:translateY(-2px)}
+.tech-icon{display:block;font-size:1.6rem;margin-bottom:6px}
+.tech-name{font-size:.72rem;font-weight:700;color:var(--text1)}
+.feature-list{list-style:none;display:flex;flex-direction:column;gap:10px}
+.feature-item{display:flex;align-items:flex-start;gap:10px;font-size:.82rem;color:var(--text2);line-height:1.4}
+.feature-check{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:rgba(0,166,81,.15);border:1px solid rgba(0,166,81,.35);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:var(--verde);margin-top:1px}
+.feature-item.future .feature-check{display:none}
+.feature-soon{flex-shrink:0;font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.3);color:var(--ouro);white-space:nowrap;margin-top:2px}
+/* ── SHARE ── */
+.share-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px}
+.share-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:13px 10px;border-radius:12px;border:none;cursor:pointer;
+  font-family:'Barlow',sans-serif;font-size:.82rem;font-weight:700;
+  transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.share-btn:hover{transform:translateY(-2px)}
+.share-btn:active{transform:scale(.97)}
+.share-icon{width:18px;height:18px;flex-shrink:0}
+.share-whatsapp{background:#25D366;color:#fff;box-shadow:0 4px 16px rgba(37,211,102,.35)}
+.share-whatsapp:hover{box-shadow:0 8px 24px rgba(37,211,102,.5)}
+.share-facebook{background:#1877F2;color:#fff;box-shadow:0 4px 16px rgba(24,119,242,.35)}
+.share-facebook:hover{box-shadow:0 8px 24px rgba(24,119,242,.5)}
+.share-linkedin{background:#0A66C2;color:#fff;box-shadow:0 4px 16px rgba(10,102,194,.35)}
+.share-linkedin:hover{box-shadow:0 8px 24px rgba(10,102,194,.5)}
+.share-copy{background:var(--input-bg);color:var(--text1);border:1px solid var(--borda);box-shadow:none}
+.share-copy:hover{border-color:var(--verde);background:rgba(0,166,81,.08)}
+.share-counter{
+  display:flex;align-items:center;gap:14px;
+  background:linear-gradient(135deg,rgba(0,166,81,.08),rgba(0,61,165,.08));
+  border:1px solid rgba(0,166,81,.25);border-radius:16px;
+  padding:16px 20px;
+}
+.share-counter-icon{font-size:2rem;flex-shrink:0}
+.share-counter-num{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;color:var(--verde);line-height:1;text-shadow:0 0 20px rgba(0,166,81,.4)}
+.share-counter-lbl{font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text2)}
+.share-counter-text{font-size:.78rem;color:var(--text2);line-height:1.5;margin-left:auto;text-align:right}
+.share-counter-text strong{color:var(--verde);font-size:1rem}
+@media(max-width:420px){.share-counter{flex-wrap:wrap}.share-counter-text{margin-left:0;text-align:left}}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.18)}100%{transform:scale(1)}}
+.share-counter-num.pop{animation:pop .3s ease}
+
+@media(prefers-reduced-motion:reduce){.ball{animation:none}.btn{transition:none}}
+</style>
+</head>
+<body>
+<div class="bg-field"></div>
+<button class="theme-toggle" id="themeBtn" title="Alternar tema" aria-label="Alternar tema claro/escuro">🌙</button>
+
+<!-- CITY / STADIUM MODAL -->
+<div class="modal-overlay" id="cityModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('cityModal')" aria-label="Fechar">✕</button>
+    <div class="modal-stadium-img" id="modalStadiumEmoji"></div>
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-sub" id="modalSub"></div>
+    <div class="modal-stats" id="modalStats"></div>
+    <p style="font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text2);margin-bottom:8px;">Partidas</p>
+    <div class="modal-games-list" id="modalGames"></div>
+    <button class="btn btn-secondary" style="margin-top:16px" onclick="closeModal('cityModal')">Fechar</button>
+  </div>
+</div>
+
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="flag-strip" id="allFlags"></div>
+    <div class="year-badge">FIFA WORLD CUP · 2026</div>
+    <h1>COPA DO<br><span>MUNDO</span></h1>
+    <p class="tagline">104 jogos · 48 seleções · 3 países · 16 estádios<br>Portal completo na palma da mão</p>
+  </header>
+
+  <!-- COUNTDOWN -->
+  <div class="countdown-wrap">
+    <p class="countdown-label" id="countdownLabel">⏳ Abertura da Copa · 11 de Junho, 2026</p>
+    <div class="countdown">
+      <div class="cd-block"><div class="cd-num" id="cd-d">00</div><div class="cd-lbl">Dias</div></div>
+      <div class="cd-block"><div class="cd-num" id="cd-h">00</div><div class="cd-lbl">Horas</div></div>
+      <div class="cd-block"><div class="cd-num" id="cd-m">00</div><div class="cd-lbl">Min</div></div>
+      <div class="cd-block"><div class="cd-num" id="cd-s">00</div><div class="cd-lbl">Seg</div></div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs-outer">
+    <div class="tabs">
+      <button class="tab active" onclick="showPanel('agenda',this)">📅 Agenda</button>
+      <button class="tab" onclick="showPanel('grupos',this)">🏆 Grupos</button>
+      <button class="tab" onclick="showPanel('cidades',this)">🌎 Cidades</button>
+      <button class="tab" onclick="showPanel('estadios',this)">🏟️ Estádios</button>
+      <button class="tab" onclick="showPanel('stats',this)">📊 Stats</button>
+      
+    </div>
+  </div>
+
+  <!-- ══ PAINEL: AGENDA ══ -->
+  <div class="panel active" id="panel-agenda">
+    <div class="card">
+      <div class="ball-wrap"><span class="ball">⚽</span></div>
+
+      <!-- Filtros de seleção de jogos -->
+      <div class="cal-filters">
+        <p class="cal-filters-title">🗂 Escolha quais jogos incluir</p>
+        <div class="cal-filter-grid" id="calFilterGrid">
+          <label class="cal-filter-item selected" id="fi-all">
+            <input type="checkbox" class="cal-filter-cb" id="f-all" checked onchange="onCalFilter('all',this)">
+            <span class="cal-filter-text">⚽ Todos os jogos</span>
+          </label>
+          <label class="cal-filter-item" id="fi-brasil">
+            <input type="checkbox" class="cal-filter-cb" id="f-brasil" onchange="onCalFilter('brasil',this)">
+            <span class="cal-filter-text">🇧🇷 Jogos do Brasil</span>
+          </label>
+          <label class="cal-filter-item" id="fi-gs">
+            <input type="checkbox" class="cal-filter-cb" id="f-gs" onchange="onCalFilter('gs',this)">
+            <span class="cal-filter-text">📋 Fase de Grupos</span>
+          </label>
+          <label class="cal-filter-item" id="fi-r32">
+            <input type="checkbox" class="cal-filter-cb" id="f-r32" onchange="onCalFilter('r32',this)">
+            <span class="cal-filter-text">🔟 Oitavas de Final</span>
+          </label>
+          <label class="cal-filter-item" id="fi-r16">
+            <input type="checkbox" class="cal-filter-cb" id="f-r16" onchange="onCalFilter('r16',this)">
+            <span class="cal-filter-text">🎯 Round of 16</span>
+          </label>
+          <label class="cal-filter-item" id="fi-qf">
+            <input type="checkbox" class="cal-filter-cb" id="f-qf" onchange="onCalFilter('qf',this)">
+            <span class="cal-filter-text">🏅 Quartas de Final</span>
+          </label>
+          <label class="cal-filter-item" id="fi-sf">
+            <input type="checkbox" class="cal-filter-cb" id="f-sf" onchange="onCalFilter('sf',this)">
+            <span class="cal-filter-text">🔥 Semifinais</span>
+          </label>
+          <label class="cal-filter-item" id="fi-tp">
+            <input type="checkbox" class="cal-filter-cb" id="f-tp" onchange="onCalFilter('tp',this)">
+            <span class="cal-filter-text">🥉 3º Lugar</span>
+          </label>
+          <label class="cal-filter-item" id="fi-fin">
+            <input type="checkbox" class="cal-filter-cb" id="f-fin" onchange="onCalFilter('fin',this)">
+            <span class="cal-filter-text">🏆 Final</span>
+          </label>
+          <label class="cal-filter-item" id="fi-ko">
+            <input type="checkbox" class="cal-filter-cb" id="f-ko" onchange="onCalFilter('ko',this)">
+            <span class="cal-filter-text">⚔️ Só Mata-mata</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Lembretes -->
+      <div class="reminders-section">
+        <p class="reminders-title">🔔 Lembretes antes de cada jogo</p>
+        <div class="reminders-grid" id="remindersGrid">
+          <label class="reminder-item" id="ri-15">
+            <input type="checkbox" class="reminder-cb" id="r-15" value="15" onchange="onReminder(this)">
+            <span class="reminder-text">15 min</span>
+          </label>
+          <label class="reminder-item" id="ri-30">
+            <input type="checkbox" class="reminder-cb" id="r-30" value="30" onchange="onReminder(this)">
+            <span class="reminder-text">30 min</span>
+          </label>
+          <label class="reminder-item selected" id="ri-60">
+            <input type="checkbox" class="reminder-cb" id="r-60" value="60" checked onchange="onReminder(this)">
+            <span class="reminder-text">1 hora</span>
+          </label>
+          <label class="reminder-item" id="ri-180">
+            <input type="checkbox" class="reminder-cb" id="r-180" value="180" onchange="onReminder(this)">
+            <span class="reminder-text">3 horas</span>
+          </label>
+          <label class="reminder-item" id="ri-1440">
+            <input type="checkbox" class="reminder-cb" id="r-1440" value="1440" onchange="onReminder(this)">
+            <span class="reminder-text">1 dia</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Onde assistir -->
+      <p class="broadcast-title">📺 Onde assistir no Brasil</p>
+      <div class="broadcast-grid">
+        <div class="bc-item bc-free"><div class="bc-icon">📡</div><span class="bc-name">Globo</span><span class="bc-type">TV Aberta · Grátis</span></div>
+        <div class="bc-item bc-free"><div class="bc-icon">📺</div><span class="bc-name">SBT</span><span class="bc-type">TV Aberta · Grátis</span></div>
+        <div class="bc-item bc-free"><div class="bc-icon">▶️</div><span class="bc-name">CazéTV</span><span class="bc-type">YouTube · Grátis</span></div>
+        <div class="bc-item"><div class="bc-icon">🎬</div><span class="bc-name">SporTV</span><span class="bc-type">TV Fechada</span></div>
+        <div class="bc-item"><div class="bc-icon">🌐</div><span class="bc-name">Globoplay</span><span class="bc-type">Streaming</span></div>
+        <div class="bc-item"><div class="bc-icon">📱</div><span class="bc-name">N Sports</span><span class="bc-type">YouTube</span></div>
+      </div>
+
+      <button class="btn" onclick="downloadICS()">
+        <span class="btn-icon">📅</span>
+        <span id="btnText">Adicionar Copa do Mundo 2026 à minha agenda</span>
+      </button>
+      <div id="calCountNote" style="text-align:center;margin-top:10px;font-size:.78rem;color:var(--verde);font-weight:600;"></div>
+
+      <p class="note">
+        Gera arquivo <strong>.ICS</strong> com os jogos selecionados em <strong>Horário de Brasília</strong>.<br>
+        Estádio · Cidade · Fase · Transmissão BR incluídos em cada evento.
+      </p>
+      <div class="compat">
+        <div class="badge"><div class="dot"></div>Google Agenda</div>
+        <div class="badge"><div class="dot"></div>Apple Calendar</div>
+        <div class="badge"><div class="dot"></div>Outlook</div>
+      </div>
+      <div class="success" id="successMsg"></div>
+    </div>
+
+    <div class="tips">
+      <p class="tips-title">📲 Como importar</p>
+      <div class="tip"><div class="tip-num">1</div><div class="tip-text"><strong>Android:</strong> Abra o arquivo → selecione Google Agenda → confirme a importação.</div></div>
+      <div class="tip"><div class="tip-num">2</div><div class="tip-text"><strong>iPhone:</strong> Abra o arquivo → toque em "Adicionar todos" no app Calendário.</div></div>
+      <div class="tip"><div class="tip-num">3</div><div class="tip-text"><strong>PC / Mac:</strong> Abra o .ics ou importe via Google Agenda → Configurações → Importar.</div></div>
+    </div>
+  </div>
+
+  <!-- ══ PAINEL: GRUPOS ══ -->
+  <div class="panel" id="panel-grupos">
+    <div class="groups-header">
+      <span class="groups-title">Tabela de Grupos</span>
+      <span class="groups-note">Fase inicial · 48 seleções</span>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--verde)"></div>Classificado (1º)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#3B82F6"></div>Classificado (2º)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(255,165,0,.7)"></div>Possível 3º melhor</div>
+    </div>
+    <div id="groupsContainer"></div>
+  </div>
+
+  <!-- ══ PAINEL: CIDADES ══ -->
+  <div class="panel" id="panel-cidades">
+    <div class="card">
+      <p class="card-title">🌎 Cidades-Sede</p>
+      <p style="font-size:.8rem;color:var(--text2);margin-bottom:16px;">Clique em uma cidade para ver estádio, capacidade e jogos.</p>
+      <div class="cities-grid" id="citiesGrid"></div>
+    </div>
+  </div>
+
+  <!-- ══ PAINEL: ESTÁDIOS ══ -->
+  <div class="panel" id="panel-estadios">
+    <div class="card" style="padding-bottom:16px">
+      <p class="card-title">🏟️ Estádios da Copa 2026</p>
+      <p style="font-size:.8rem;color:var(--text2);margin-bottom:16px;">16 estádios em 3 países. Clique para ver as partidas.</p>
+    </div>
+    <div class="stadiums-grid" id="stadiumsGrid"></div>
+  </div>
+
+
+  <!-- ══ PAINEL: STATS ══ -->
+  <div class="panel" id="panel-stats">
+    <div class="card">
+      <p class="card-title">📊 Estatísticas da Copa</p>
+
+      <div class="live-stats-grid">
+        <div class="live-stat-card"><div class="live-stat-val">104</div><div class="live-stat-lbl">Total de Jogos</div></div>
+        <div class="live-stat-card"><div class="live-stat-val" id="statsPlayed">0</div><div class="live-stat-lbl">Jogos Realizados</div></div>
+        <div class="live-stat-card"><div class="live-stat-val" id="statsRemaining">104</div><div class="live-stat-lbl">Jogos Restantes</div></div>
+        <div class="live-stat-card blue"><div class="live-stat-val" id="statsGoals">—</div><div class="live-stat-lbl">Gols Marcados</div></div>
+        <div class="live-stat-card blue"><div class="live-stat-val" id="statsAvgGoals">—</div><div class="live-stat-lbl">Média de Gols</div></div>
+        <div class="live-stat-card blue"><div class="live-stat-val" id="statsAttendance">—</div><div class="live-stat-lbl">Público Total</div></div>
+        <div class="live-stat-card yellow"><div class="live-stat-val" id="statsYellow">—</div><div class="live-stat-lbl">Cartões Amarelos</div></div>
+        <div class="live-stat-card red"><div class="live-stat-val" id="statsRed">—</div><div class="live-stat-lbl">Cartões Vermelhos</div></div>
+      </div>
+
+      <p style="font-size:.7rem;color:var(--text2);text-align:center;margin-bottom:16px">As estatísticas ao vivo serão atualizadas durante a Copa (11 jun – 19 jul).</p>
+
+      <div style="margin-bottom:20px">
+        <p class="broadcast-title" style="text-align:left;margin-bottom:12px">🗓 Calendário da Copa</p>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--input-bg);border-radius:10px;border:1px solid var(--input-border)">
+            <span style="font-size:.82rem;color:var(--text1);font-weight:600">⚽ Fase de Grupos</span><span style="font-size:.75rem;color:var(--text2)">11 jun – 27 jun</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--input-bg);border-radius:10px;border:1px solid var(--input-border)">
+            <span style="font-size:.82rem;color:var(--text1);font-weight:600">🔟 Oitavas (Round of 32)</span><span style="font-size:.75rem;color:var(--text2)">28 jun – 3 jul</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--input-bg);border-radius:10px;border:1px solid var(--input-border)">
+            <span style="font-size:.82rem;color:var(--text1);font-weight:600">🎯 Round of 16</span><span style="font-size:.75rem;color:var(--text2)">4 jul – 7 jul</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--input-bg);border-radius:10px;border:1px solid var(--input-border)">
+            <span style="font-size:.82rem;color:var(--text1);font-weight:600">🏅 Quartas de Final</span><span style="font-size:.75rem;color:var(--text2)">9 jul – 11 jul</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--input-bg);border-radius:10px;border:1px solid var(--input-border)">
+            <span style="font-size:.82rem;color:var(--text1);font-weight:600">🔥 Semifinais</span><span style="font-size:.75rem;color:var(--text2)">14 jul – 15 jul</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(0,166,81,.08);border-radius:10px;border:1px solid rgba(0,166,81,.3)">
+            <span style="font-size:.82rem;color:var(--verde);font-weight:700">🏆 Final · MetLife Stadium</span><span style="font-size:.75rem;color:var(--text2)">19 jul · Nova York</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p class="broadcast-title" style="text-align:left;margin-bottom:12px">🇧🇷 Jogos do Brasil – Fase de Grupos</p>
+        <div id="brasilMatchesList" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+    </div>
+  </div>
+
+  
+  </div><!-- /wrapper -->
+
+  <!-- SOBRE MOVIDO PARA O FINAL DA PÁGINA -->
+  <div class="wrapper">
+    
+
+    <!-- Dev card -->
+    <div class="card sobre-hero">
+      <div class="sobre-avatar">GR</div>
+      <div class="sobre-dev-info">
+        <h2 class="sobre-dev-name">Gabriel Rezende</h2>
+        <p class="sobre-dev-role">Estudante de Sistemas de Informação · Desenvolvedor</p>
+        <div class="sobre-tags">
+          <span class="sobre-tag">⚽ Futebol</span>
+          <span class="sobre-tag">💻 Tech</span>
+          <span class="sobre-tag">🎓 SIS</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sobre o projeto -->
+    <div class="card">
+      <p class="card-title">🎯 Objetivo do Projeto</p>
+      <p class="sobre-text">Este projeto foi desenvolvido por <strong>Gabriel Rezende</strong>, estudante de Sistemas de Informação e apaixonado por tecnologia e futebol.</p>
+      <p class="sobre-text">O objetivo da plataforma é <strong>facilitar o acompanhamento da Copa do Mundo FIFA 2026</strong>, permitindo que os usuários adicionem os jogos diretamente às suas agendas de forma simples e rápida, com lembretes personalizados e informações detalhadas sobre cada partida.</p>
+
+      <div class="sobre-divider"></div>
+
+      <p class="card-title" style="margin-bottom:14px">💡 Motivação</p>
+      <p class="sobre-text">Com a Copa do Mundo acontecendo em 3 países e 16 estádios diferentes, acompanhar todos os 104 jogos pode ser desafiador. A ideia nasceu da necessidade real de ter um portal centralizado, bonito e funcional, que qualquer torcedor pudesse usar no celular sem instalar nada.</p>
+
+      <div class="sobre-divider"></div>
+
+      <p class="card-title" style="margin-bottom:14px">🛠️ Tecnologias Utilizadas</p>
+      <div class="tech-grid">
+        <div class="tech-item"><span class="tech-icon">🌐</span><span class="tech-name">HTML5</span></div>
+        <div class="tech-item"><span class="tech-icon">🎨</span><span class="tech-name">CSS3</span></div>
+        <div class="tech-item"><span class="tech-icon">⚡</span><span class="tech-name">JavaScript</span></div>
+        <div class="tech-item"><span class="tech-icon">🐙</span><span class="tech-name">GitHub Pages</span></div>
+      </div>
+    </div>
+
+    <!-- Funcionalidades -->
+    <div class="card">
+      <p class="card-title">✅ Funcionalidades Disponíveis</p>
+      <ul class="feature-list">
+        <li class="feature-item"><span class="feature-check">✓</span><span>Exportação de jogos para agenda (.ICS) com lembretes personalizados</span></li>
+        <li class="feature-item"><span class="feature-check">✓</span><span>Tabela completa dos 12 grupos com todas as 48 seleções</span></li>
+        <li class="feature-item"><span class="feature-check">✓</span><span>Informações sobre as 16 cidades-sede com fotos reais</span></li>
+        <li class="feature-item"><span class="feature-check">✓</span><span>Galeria de estádios com capacidade e jogos por arena</span></li>
+        <li class="feature-item"><span class="feature-check">✓</span><span>Estatísticas da Copa com dados ao vivo durante o torneio</span></li>
+        <li class="feature-item"><span class="feature-check">✓</span><span>Filtros por fase, país e jogos do Brasil</span></li>
+        <li class="feature-item"><span class="feature-check">✓</span><span>Tema claro e escuro · 100% responsivo para mobile</span></li>
+      </ul>
+
+      <div class="sobre-divider"></div>
+
+      <p class="card-title" style="margin-bottom:14px">🚀 Atualizações Planejadas</p>
+      <ul class="feature-list">
+        <li class="feature-item future"><span class="feature-soon">Em breve</span><span>Placar ao vivo durante os jogos</span></li>
+        <li class="feature-item future"><span class="feature-soon">Em breve</span><span>Artilharia e estatísticas de jogadores</span></li>
+        <li class="feature-item future"><span class="feature-soon">Em breve</span><span>Notificações push para gols e resultados</span></li>
+        <li class="feature-item future"><span class="feature-soon">Em breve</span><span>Modo offline (PWA) para uso sem internet</span></li>
+        <li class="feature-item future"><span class="feature-soon">Em breve</span><span>Integração com API oficial da FIFA</span></li>
+      </ul>
+    </div>
+
+    
+  </div>
+
+
+<footer>⚽ Copa do Mundo FIFA 2026 · 11 Jun – 19 Jul · EUA, México e Canadá</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// TEMA
+// ═══════════════════════════════════════════════════════════════════
+const themeBtn = document.getElementById('themeBtn');
+let isDark = localStorage.getItem('copa26Theme') !== 'light';
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  themeBtn.textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('copa26Theme', isDark ? 'dark' : 'light');
+}
+applyTheme();
+themeBtn.addEventListener('click', () => { isDark = !isDark; applyTheme(); });
+
+// ═══════════════════════════════════════════════════════════════════
+// ABAS
+// ═══════════════════════════════════════════════════════════════════
+function showPanel(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// FLAGS
+// ═══════════════════════════════════════════════════════════════════
+const FLAGS = {
+  'México':'🇲🇽','África do Sul':'🇿🇦','Coreia do Sul':'🇰🇷','Tchéquia':'🇨🇿',
+  'Canadá':'🇨🇦','Bósnia-Herzegovina':'🇧🇦','EUA':'🇺🇸','Paraguai':'🇵🇾',
+  'Catar':'🇶🇦','Suíça':'🇨🇭','Brasil':'🇧🇷','Marrocos':'🇲🇦','Haiti':'🇭🇹',
+  'Escócia':'🏴󠁧󠁢󠁳󠁣󠁴󠁿','Austrália':'🇦🇺','Turquia':'🇹🇷','Alemanha':'🇩🇪',
+  'Curaçao':'🇨🇼','Holanda':'🇳🇱','Japão':'🇯🇵','Costa do Marfim':'🇨🇮',
+  'Equador':'🇪🇨','Suécia':'🇸🇪','Tunísia':'🇹🇳','Espanha':'🇪🇸',
+  'Cabo Verde':'🇨🇻','Bélgica':'🇧🇪','Egito':'🇪🇬','Arábia Saudita':'🇸🇦',
+  'Uruguai':'🇺🇾','Irã':'🇮🇷','Nova Zelândia':'🇳🇿','França':'🇫🇷',
+  'Senegal':'🇸🇳','Iraque':'🇮🇶','Noruega':'🇳🇴','Argentina':'🇦🇷',
+  'Argélia':'🇩🇿','Áustria':'🇦🇹','Jordânia':'🇯🇴','Portugal':'🇵🇹',
+  'RD Congo':'🇨🇩','Inglaterra':'🏴󠁧󠁢󠁥󠁮󠁧󠁿','Croácia':'🇭🇷','Gana':'🇬🇭',
+  'Panamá':'🇵🇦','Uzbequistão':'🇺🇿','Colômbia':'🇨🇴',
+};
+
+document.getElementById('allFlags').innerHTML = Object.values(FLAGS).map(f=>`<span class="flag">${f}</span>`).join('');
+
+function withFlags(title) {
+  if (!title.includes(' x ')) return title;
+  const [a, b] = title.split(' x ');
+  return (FLAGS[a.trim()]||'') + ' ' + a.trim() + ' x ' + (FLAGS[b.trim()]||'') + ' ' + b.trim();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// COUNTDOWN
+// ═══════════════════════════════════════════════════════════════════
+function updateCountdown() {
+  const target = new Date('2026-06-11T15:00:00-06:00');
+  const now = new Date();
+  const diff = target - now;
+  if (diff <= 0) {
+    ['cd-d','cd-h','cd-m','cd-s'].forEach(id => document.getElementById(id).textContent = '00');
+    document.getElementById('countdownLabel').textContent = '🏆 A Copa já começou!';
+    return;
+  }
+  document.getElementById('cd-d').textContent = String(Math.floor(diff/86400000)).padStart(2,'0');
+  document.getElementById('cd-h').textContent = String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
+  document.getElementById('cd-m').textContent = String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+  document.getElementById('cd-s').textContent = String(Math.floor((diff%60000)/1000)).padStart(2,'0');
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+// ═══════════════════════════════════════════════════════════════════
+// ICS HELPERS
+// ═══════════════════════════════════════════════════════════════════
+const CAZETV    = 'CazéTV (YouTube - Grátis)';
+const GLOBO_ALL = 'Globo, SporTV, Globoplay, GE TV, SBT, N Sports, CazéTV';
+const GLOBO_SP  = 'Globo, SporTV, Globoplay, GE TV, CazéTV';
+const SBT_GL    = 'SBT, N Sports, Globo, SporTV, Globoplay, GE TV, CazéTV';
+const GLOBO3    = 'Globo, SporTV, Globoplay, CazéTV';
+const GS='Fase de Grupos', R32='Oitavas de Final', R16='Round of 16',
+      QF='Quartas de Final', SF='Semifinal', TP='3º Lugar', FIN='Final';
+const USA='EUA', MEX='México', CAN='Canadá';
+
+let uid = 0;
+function toUTC(dateStr, timeHHMM) {
+  const [h, m] = timeHHMM.split(':').map(Number);
+  const d = new Date(dateStr + 'T' + String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':00-04:00');
+  return d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
+}
+function addHours(utcCompact, hrs) {
+  const s = utcCompact;
+  const d = new Date(`${s.slice(0,4)}-${s.slice(4,6)}-${s.slice(6,8)}T${s.slice(9,11)}:${s.slice(11,13)}:${s.slice(13,15)}Z`);
+  d.setUTCHours(d.getUTCHours() + hrs);
+  return d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
+}
+function esc(s) { return s.replace(/[,;\\]/g, c => '\\' + c).replace(/\n/g,'\\n'); }
+function fold(line) {
+  const out = [];
+  while (line.length > 75) { out.push(line.slice(0,75)); line = ' ' + line.slice(75); }
+  out.push(line); return out.join('\r\n');
+}
+function vevent(title, dateStr, timeET, durationHrs, stadium, city, country, stage, broadcast, remindersMin) {
+  const dtstart = toUTC(dateStr, timeET);
+  const dtend   = addHours(dtstart, durationHrs);
+  const titleFmt = withFlags(title);
+  let teams = '';
+  if (title.includes(' x ')) {
+    const [a, b] = title.split(' x ');
+    teams = `${FLAGS[a.trim()]||''} ${a.trim()}  x  ${FLAGS[b.trim()]||''} ${b.trim()}\\n`;
+  }
+  const desc = `${teams}\\n🏟 Estádio: ${stadium}\\n📍 Cidade: ${city} - ${country}\\n🏆 Fase: ${stage}\\n📺 Onde assistir (BR): ${broadcast}`;
+  const alarms = (remindersMin||[]).map(min => [
+    'BEGIN:VALARM',
+    'ACTION:DISPLAY',
+    `DESCRIPTION:⚽ ${esc(titleFmt)} começa em ${min < 60 ? min + ' minutos' : min === 60 ? '1 hora' : min === 180 ? '3 horas' : '1 dia'}!`,
+    `TRIGGER:-PT${min}M`,
+    'END:VALARM'
+  ].join('\r\n')).join('\r\n');
+  return [
+    'BEGIN:VEVENT',
+    `UID:wc2026-${++uid}@copa2026br`,
+    `DTSTAMP:20260609T120000Z`,
+    `DTSTART:${dtstart}`,
+    `DTEND:${dtend}`,
+    fold(`SUMMARY:⚽ ${esc(titleFmt)}`),
+    fold(`DESCRIPTION:${esc(desc)}`),
+    fold(`LOCATION:${esc(stadium + ', ' + city + ', ' + country)}`),
+    `CATEGORIES:Copa do Mundo 2026`,
+    alarms,
+    'END:VEVENT',
+  ].filter(Boolean).join('\r\n');
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// MATCHES DATA
+// ═══════════════════════════════════════════════════════════════════
+const MATCHES = [
+  ['México x África do Sul','2026-06-11','15:00',2,'Estadio Azteca','Cidade do México',MEX,GS,GLOBO_ALL],
+  ['Coreia do Sul x Tchéquia','2026-06-11','22:00',2,'Estadio Akron','Zapopan',MEX,GS,CAZETV],
+  ['Canadá x Bósnia-Herzegovina','2026-06-12','15:00',2,'BMO Field','Toronto',CAN,GS,CAZETV],
+  ['EUA x Paraguai','2026-06-12','21:00',2,'SoFi Stadium','Los Angeles',USA,GS,GLOBO_ALL],
+  ['Catar x Suíça','2026-06-13','15:00',2,"Levi's Stadium",'São Francisco',USA,GS,CAZETV],
+  ['Brasil x Marrocos','2026-06-13','18:00',2,'MetLife Stadium','Nova York/NJ',USA,GS,GLOBO_ALL],
+  ['Haiti x Escócia','2026-06-13','21:00',2,'Gillette Stadium','Boston',USA,GS,CAZETV],
+  ['Austrália x Turquia','2026-06-14','00:00',2,'BC Place','Vancouver',CAN,GS,GLOBO_SP],
+  ['Alemanha x Curaçao','2026-06-14','13:00',2,'NRG Stadium','Houston',USA,GS,GLOBO_SP],
+  ['Holanda x Japão','2026-06-14','16:00',2,'AT&T Stadium','Arlington/Dallas',USA,GS,SBT_GL],
+  ['Costa do Marfim x Equador','2026-06-14','19:00',2,'Lincoln Financial Field','Filadélfia',USA,GS,GLOBO3],
+  ['Suécia x Tunísia','2026-06-14','22:00',2,'Estadio BBVA','Monterrey',MEX,GS,GLOBO3],
+  ['Espanha x Cabo Verde','2026-06-15','12:00',2,'Mercedes-Benz Stadium','Atlanta',USA,GS,CAZETV],
+  ['Bélgica x Egito','2026-06-15','15:00',2,'Lumen Field','Seattle',USA,GS,GLOBO_SP],
+  ['Arábia Saudita x Uruguai','2026-06-15','18:00',2,'Hard Rock Stadium','Miami Gardens',USA,GS,SBT_GL],
+  ['Irã x Nova Zelândia','2026-06-15','21:00',2,'SoFi Stadium','Los Angeles',USA,GS,CAZETV],
+  ['França x Senegal','2026-06-16','15:00',2,'MetLife Stadium','Nova York/NJ',USA,GS,GLOBO_ALL],
+  ['Iraque x Noruega','2026-06-16','18:00',2,'Gillette Stadium','Boston',USA,GS,CAZETV],
+  ['Argentina x Argélia','2026-06-16','21:00',2,'Arrowhead Stadium','Kansas City',USA,GS,CAZETV],
+  ['Áustria x Jordânia','2026-06-17','00:00',2,"Levi's Stadium",'São Francisco',USA,GS,GLOBO3],
+  ['Portugal x RD Congo','2026-06-17','13:00',2,'NRG Stadium','Houston',USA,GS,CAZETV],
+  ['Inglaterra x Croácia','2026-06-17','16:00',2,'AT&T Stadium','Arlington/Dallas',USA,GS,GLOBO_ALL],
+  ['Gana x Panamá','2026-06-17','19:00',2,'BMO Field','Toronto',CAN,GS,CAZETV],
+  ['Uzbequistão x Colômbia','2026-06-17','22:00',2,'Estadio Azteca','Cidade do México',MEX,GS,GLOBO3],
+  ['Tchéquia x África do Sul','2026-06-18','12:00',2,'Mercedes-Benz Stadium','Atlanta',USA,GS,CAZETV],
+  ['Suíça x Bósnia-Herzegovina','2026-06-18','15:00',2,'SoFi Stadium','Los Angeles',USA,GS,CAZETV],
+  ['Canadá x Catar','2026-06-18','18:00',2,'BC Place','Vancouver',CAN,GS,CAZETV],
+  ['México x Coreia do Sul','2026-06-18','21:00',2,'Estadio Akron','Zapopan',MEX,GS,GLOBO_ALL],
+  ['EUA x Austrália','2026-06-19','15:00',2,'Lumen Field','Seattle',USA,GS,GLOBO_SP],
+  ['Escócia x Marrocos','2026-06-19','18:00',2,'Gillette Stadium','Boston',USA,GS,CAZETV],
+  ['Brasil x Haiti','2026-06-19','20:30',2,'Lincoln Financial Field','Filadélfia',USA,GS,GLOBO_ALL],
+  ['Turquia x Paraguai','2026-06-19','23:00',2,"Levi's Stadium",'São Francisco',USA,GS,CAZETV],
+  ['Holanda x Suécia','2026-06-20','13:00',2,'NRG Stadium','Houston',USA,GS,GLOBO_SP],
+  ['Alemanha x Costa do Marfim','2026-06-20','16:00',2,'BMO Field','Toronto',CAN,GS,GLOBO_SP],
+  ['Equador x Curaçao','2026-06-20','20:00',2,'Arrowhead Stadium','Kansas City',USA,GS,CAZETV],
+  ['Tunísia x Japão','2026-06-21','00:00',2,'Estadio BBVA','Monterrey',MEX,GS,CAZETV],
+  ['Espanha x Arábia Saudita','2026-06-21','12:00',2,'Mercedes-Benz Stadium','Atlanta',USA,GS,GLOBO_SP],
+  ['Bélgica x Irã','2026-06-21','15:00',2,'SoFi Stadium','Los Angeles',USA,GS,GLOBO_SP],
+  ['Uruguai x Cabo Verde','2026-06-21','18:00',2,'Hard Rock Stadium','Miami Gardens',USA,GS,GLOBO3],
+  ['Nova Zelândia x Egito','2026-06-21','21:00',2,'BC Place','Vancouver',CAN,GS,CAZETV],
+  ['Argentina x Áustria','2026-06-22','13:00',2,'AT&T Stadium','Arlington/Dallas',USA,GS,SBT_GL],
+  ['França x Iraque','2026-06-22','17:00',2,'Lincoln Financial Field','Filadélfia',USA,GS,GLOBO_SP],
+  ['Noruega x Senegal','2026-06-22','20:00',2,'MetLife Stadium','Nova York/NJ',USA,GS,CAZETV],
+  ['Jordânia x Argélia','2026-06-22','23:00',2,"Levi's Stadium",'São Francisco',USA,GS,CAZETV],
+  ['Portugal x Uzbequistão','2026-06-23','13:00',2,'NRG Stadium','Houston',USA,GS,GLOBO_SP],
+  ['Inglaterra x Gana','2026-06-23','16:00',2,'Gillette Stadium','Boston',USA,GS,GLOBO_SP],
+  ['Panamá x Croácia','2026-06-23','19:00',2,'BMO Field','Toronto',CAN,GS,CAZETV],
+  ['Colômbia x RD Congo','2026-06-23','22:00',2,'Estadio Akron','Zapopan',MEX,GS,CAZETV],
+  ['Suíça x Canadá','2026-06-24','15:00',2,'BC Place','Vancouver',CAN,GS,GLOBO_SP],
+  ['Bósnia-Herzegovina x Catar','2026-06-24','15:00',2,'Lumen Field','Seattle',USA,GS,CAZETV],
+  ['Escócia x Brasil','2026-06-24','18:00',2,'Hard Rock Stadium','Miami Gardens',USA,GS,GLOBO_ALL],
+  ['Marrocos x Haiti','2026-06-24','18:00',2,'Mercedes-Benz Stadium','Atlanta',USA,GS,CAZETV],
+  ['Tchéquia x México','2026-06-24','21:00',2,'Estadio Azteca','Cidade do México',MEX,GS,GLOBO_ALL],
+  ['África do Sul x Coreia do Sul','2026-06-24','21:00',2,'Estadio BBVA','Monterrey',MEX,GS,CAZETV],
+  ['Curaçao x Costa do Marfim','2026-06-25','16:00',2,'Lincoln Financial Field','Filadélfia',USA,GS,CAZETV],
+  ['Equador x Alemanha','2026-06-25','16:00',2,'MetLife Stadium','Nova York/NJ',USA,GS,GLOBO_SP],
+  ['Japão x Suécia','2026-06-25','19:00',2,'AT&T Stadium','Arlington/Dallas',USA,GS,GLOBO_SP],
+  ['Tunísia x Holanda','2026-06-25','19:00',2,'Arrowhead Stadium','Kansas City',USA,GS,CAZETV],
+  ['Turquia x EUA','2026-06-25','22:00',2,'SoFi Stadium','Los Angeles',USA,GS,GLOBO_ALL],
+  ['Paraguai x Austrália','2026-06-25','22:00',2,"Levi's Stadium",'São Francisco',USA,GS,CAZETV],
+  ['Argélia x Áustria','2026-06-26','15:00',2,'Arrowhead Stadium','Kansas City',USA,GS,CAZETV],
+  ['Jordânia x Argentina','2026-06-26','15:00',2,'AT&T Stadium','Arlington/Dallas',USA,GS,SBT_GL],
+  ['Noruega x França','2026-06-26','15:00',2,'Gillette Stadium','Boston',USA,GS,GLOBO_SP],
+  ['Senegal x Iraque','2026-06-26','15:00',2,'BMO Field','Toronto',CAN,GS,CAZETV],
+  ['Cabo Verde x Arábia Saudita','2026-06-26','20:00',2,'NRG Stadium','Houston',USA,GS,CAZETV],
+  ['Uruguai x Espanha','2026-06-26','20:00',2,'Estadio Akron','Zapopan',MEX,GS,SBT_GL],
+  ['Egito x Irã','2026-06-26','23:00',2,'Lumen Field','Seattle',USA,GS,CAZETV],
+  ['Nova Zelândia x Bélgica','2026-06-26','23:00',2,'BC Place','Vancouver',CAN,GS,CAZETV],
+  ['Panamá x Inglaterra','2026-06-27','17:00',2,'MetLife Stadium','Nova York/NJ',USA,GS,GLOBO_SP],
+  ['Croácia x Gana','2026-06-27','17:00',2,'Lincoln Financial Field','Filadélfia',USA,GS,CAZETV],
+  ['Colômbia x Portugal','2026-06-27','19:30',2,'Hard Rock Stadium','Miami Gardens',USA,GS,GLOBO_SP],
+  ['RD Congo x Uzbequistão','2026-06-27','19:30',2,'Mercedes-Benz Stadium','Atlanta',USA,GS,CAZETV],
+  ['Brasil x Escócia','2026-06-24','18:00',2,'Hard Rock Stadium','Miami Gardens',USA,GS,GLOBO_ALL], // dup check handled in filter
+  // Oitavas
+  ['M73: 2º Grupo A x 2º Grupo B','2026-06-28','15:00',2,'SoFi Stadium','Los Angeles',USA,R32,GLOBO_SP],
+  ['M76: 1º Grupo C x 2º Grupo F','2026-06-29','13:00',2,'NRG Stadium','Houston',USA,R32,GLOBO_SP],
+  ['M74: 1º Grupo E x 3º Melhor','2026-06-29','16:30',2,'Gillette Stadium','Boston',USA,R32,GLOBO_SP],
+  ['M75: 1º Grupo F x 2º Grupo C','2026-06-29','21:00',2,'Estadio BBVA','Monterrey',MEX,R32,GLOBO_SP],
+  ['M78: 2º Grupo E x 2º Grupo I','2026-06-30','13:00',2,'AT&T Stadium','Arlington/Dallas',USA,R32,GLOBO_SP],
+  ['M77: 1º Grupo I x 3º Melhor','2026-06-30','17:00',2,'MetLife Stadium','Nova York/NJ',USA,R32,GLOBO_SP],
+  ['M79: 1º Grupo A x 3º Melhor','2026-06-30','21:00',2,'Estadio Azteca','Cidade do México',MEX,R32,GLOBO_SP],
+  ['M80: 1º Grupo L x 3º Melhor','2026-07-01','12:00',2,'Mercedes-Benz Stadium','Atlanta',USA,R32,GLOBO_SP],
+  ['M82: 1º Grupo G x 3º Melhor','2026-07-01','16:00',2,'Lumen Field','Seattle',USA,R32,GLOBO_SP],
+  ['M81: 1º Grupo D x 3º Melhor','2026-07-01','20:00',2,"Levi's Stadium",'São Francisco',USA,R32,GLOBO_SP],
+  ['M84: 1º Grupo H x 2º Grupo J','2026-07-02','15:00',2,'SoFi Stadium','Los Angeles',USA,R32,GLOBO_SP],
+  ['M83: 2º Grupo K x 2º Grupo L','2026-07-02','19:00',2,'BMO Field','Toronto',CAN,R32,GLOBO_SP],
+  ['M85: 1º Grupo B x 3º Melhor','2026-07-02','23:00',2,'BC Place','Vancouver',CAN,R32,GLOBO_SP],
+  ['M88: 2º Grupo D x 2º Grupo G','2026-07-03','14:00',2,'AT&T Stadium','Arlington/Dallas',USA,R32,GLOBO_SP],
+  ['M86: 1º Grupo J x 2º Grupo H','2026-07-03','18:00',2,'Hard Rock Stadium','Miami Gardens',USA,R32,GLOBO_SP],
+  ['M87: 1º Grupo K x 3º Melhor','2026-07-03','21:30',2,'Arrowhead Stadium','Kansas City',USA,R32,GLOBO_SP],
+  // Round of 16
+  ['M90: Venc. M73 x Venc. M75','2026-07-04','13:00',2,'NRG Stadium','Houston',USA,R16,GLOBO_ALL],
+  ['M89: Venc. M74 x Venc. M77','2026-07-04','17:00',2,'Lincoln Financial Field','Filadélfia',USA,R16,GLOBO_ALL],
+  ['M91: Venc. M76 x Venc. M78','2026-07-05','16:00',2,'MetLife Stadium','Nova York/NJ',USA,R16,GLOBO_ALL],
+  ['M92: Venc. M79 x Venc. M80','2026-07-05','20:00',2,'Estadio Azteca','Cidade do México',MEX,R16,GLOBO_ALL],
+  ['M93: Venc. M83 x Venc. M84','2026-07-06','15:00',2,'AT&T Stadium','Arlington/Dallas',USA,R16,GLOBO_ALL],
+  ['M94: Venc. M81 x Venc. M82','2026-07-06','20:00',2,'Lumen Field','Seattle',USA,R16,GLOBO_ALL],
+  ['M95: Venc. M86 x Venc. M88','2026-07-07','12:00',2,'Mercedes-Benz Stadium','Atlanta',USA,R16,GLOBO_ALL],
+  ['M96: Venc. M85 x Venc. M87','2026-07-07','16:00',2,'BC Place','Vancouver',CAN,R16,GLOBO_ALL],
+  // QF
+  ['QF1: Venc. M89 x Venc. M90','2026-07-09','16:00',2,'Gillette Stadium','Boston',USA,QF,GLOBO_ALL],
+  ['QF2: Venc. M93 x Venc. M94','2026-07-10','15:00',2,'SoFi Stadium','Los Angeles',USA,QF,GLOBO_ALL],
+  ['QF3: Venc. M91 x Venc. M92','2026-07-11','17:00',2,'Hard Rock Stadium','Miami Gardens',USA,QF,GLOBO_ALL],
+  ['QF4: Venc. M95 x Venc. M96','2026-07-11','21:00',2,'Arrowhead Stadium','Kansas City',USA,QF,GLOBO_ALL],
+  // SF
+  ['Semifinal 1: Venc. QF1 x Venc. QF2','2026-07-14','15:00',2,'AT&T Stadium','Arlington/Dallas',USA,SF,GLOBO_ALL],
+  ['Semifinal 2: Venc. QF3 x Venc. QF4','2026-07-15','15:00',2,'Mercedes-Benz Stadium','Atlanta',USA,SF,GLOBO_ALL],
+  // 3rd / Final
+  ['3º Lugar: Perd. SF1 x Perd. SF2','2026-07-18','17:00',2,'Hard Rock Stadium','Miami Gardens',USA,TP,GLOBO_ALL],
+  ['🏆 FINAL DA COPA DO MUNDO FIFA 2026','2026-07-19','15:00',2,'MetLife Stadium','Nova York/NJ',USA,FIN,GLOBO_ALL],
+];
+
+// Deduplicate
+const seenMatches = new Set();
+const MATCHES_CLEAN = MATCHES.filter(m => {
+  const key = m[0]+m[1]+m[2];
+  if (seenMatches.has(key)) return false;
+  seenMatches.add(key); return true;
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// CALENDAR FILTERS & REMINDERS
+// ═══════════════════════════════════════════════════════════════════
+let activeFilters = new Set(['all']);
+let activeReminders = new Set([60]);
+
+function onReminder(cb) {
+  const val = parseInt(cb.value);
+  if (cb.checked) activeReminders.add(val);
+  else activeReminders.delete(val);
+  cb.closest('.reminder-item').classList.toggle('selected', cb.checked);
+}
+
+function onCalFilter(key, cb) {
+  const exclusive = ['all', 'brasil', 'ko'];
+  if (cb.checked) {
+    if (exclusive.includes(key)) {
+      // clear other exclusives
+      exclusive.forEach(k => {
+        if (k !== key) {
+          const el = document.getElementById('f-' + k);
+          if (el) { el.checked = false; document.getElementById('fi-' + k).classList.remove('selected'); }
+        }
+      });
+      // if all or ko, clear specific phases too
+      if (key === 'all') ['gs','r32','r16','qf','sf','tp','fin'].forEach(k => {
+        const el = document.getElementById('f-' + k);
+        if (el) { el.checked = false; document.getElementById('fi-' + k).classList.remove('selected'); }
+      });
+      activeFilters.clear();
+    }
+    activeFilters.add(key);
+  } else {
+    activeFilters.delete(key);
+    if (activeFilters.size === 0) {
+      activeFilters.add('all');
+      document.getElementById('f-all').checked = true;
+      document.getElementById('fi-all').classList.add('selected');
+    }
+  }
+  cb.closest('.cal-filter-item').classList.toggle('selected', cb.checked);
+  updateCalCount();
+}
+
+function getFilteredMatches() {
+  if (activeFilters.has('all')) return MATCHES_CLEAN;
+  const stageMap = { gs: GS, r32: R32, r16: R16, qf: QF, sf: SF, tp: TP, fin: FIN };
+  const koStages = [R32, R16, QF, SF, TP, FIN];
+  return MATCHES_CLEAN.filter(m => {
+    const [title,,,,,,, stage] = m;
+    if (activeFilters.has('brasil') && (title.includes('Brasil') || title.includes('Escócia x Brasil'))) return true;
+    if (activeFilters.has('ko') && koStages.includes(stage)) return true;
+    for (const [k, s] of Object.entries(stageMap)) {
+      if (activeFilters.has(k) && stage === s) return true;
+    }
+    return false;
+  });
+}
+
+function updateCalCount() {
+  const matches = getFilteredMatches();
+  const n = matches.length;
+  document.getElementById('calCountNote').textContent = `${n} jogo${n !== 1 ? 's' : ''} selecionado${n !== 1 ? 's' : ''}`;
+}
+updateCalCount();
+
+function buildICS(matches) {
+  uid = 0;
+  const reminders = Array.from(activeReminders);
+  const events = matches.map(([t,d,h,dur,st,ci,co,stage,br]) => vevent(t,d,h,dur,st,ci,co,stage,br,reminders));
+  return [
+    'BEGIN:VCALENDAR','VERSION:2.0',
+    'PRODID:-//Copa do Mundo 2026 Brasil//PT','CALSCALE:GREGORIAN','METHOD:PUBLISH',
+    'X-WR-CALNAME:⚽ Copa do Mundo FIFA 2026','X-WR-TIMEZONE:America/Sao_Paulo',
+    fold('X-WR-CALDESC:Todos os jogos da Copa do Mundo FIFA 2026 com horários em Brasília.'),
+    ...events,'END:VCALENDAR'
+  ].join('\r\n');
+}
+
+function downloadICS() {
+  const matches = getFilteredMatches();
+  if (!matches.length) { alert('Selecione pelo menos uma categoria de jogos.'); return; }
+  const ics  = buildICS(matches);
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = activeFilters.has('brasil') ? 'brasil_copa2026.ics' : activeFilters.has('all') ? 'copa2026_completo.ics' : 'copa2026_selecionado.ics';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+  const msg = document.getElementById('successMsg');
+  msg.innerHTML = `✅ <strong>${matches.length} jogos baixados!</strong><br>Abra o arquivo para importar à sua agenda.`;
+  msg.classList.add('show');
+  setTimeout(() => msg.classList.remove('show'), 9000);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// GROUPS TABLE
+// ═══════════════════════════════════════════════════════════════════
+const GROUPS_REAL = [
+  { letter:'A', teams:['México','Tchéquia','África do Sul','Coreia do Sul'] },
+  { letter:'B', teams:['EUA','Paraguai','Turquia','Austrália'] },
+  { letter:'C', teams:['Canadá','Bósnia-Herzegovina','Suíça','Catar'] },
+  { letter:'D', teams:['Alemanha','Equador','Costa do Marfim','Curaçao'] },
+  { letter:'E', teams:['Holanda','Japão','Suécia','Tunísia'] },
+  { letter:'F', teams:['Brasil','Marrocos','Escócia','Haiti'] },
+  { letter:'G', teams:['Espanha','Uruguai','Arábia Saudita','Cabo Verde'] },
+  { letter:'H', teams:['Argentina','França','Jordânia','Argélia'] },
+  { letter:'I', teams:['Inglaterra','Croácia','Panamá','Gana'] },
+  { letter:'J', teams:['Portugal','Colômbia','RD Congo','Uzbequistão'] },
+  { letter:'K', teams:['Bélgica','Nova Zelândia','Irã','Egito'] },
+  { letter:'L', teams:['Noruega','Senegal','Iraque','Cabo Verde'] },
+];
+
+const container = document.getElementById('groupsContainer');
+GROUPS_REAL.forEach(g => {
+  const rows = g.teams.map((team, i) => {
+    const cls = i===0?'qualify-1':i===1?'qualify-2':i===2?'qualify-3':'';
+    return `<tr><td class="${cls}" style="${team==='Brasil'?'font-weight:700;':''}"><div class="team-cell"><span class="team-flag-sm">${FLAGS[team]||''}</span><span class="team-name">${team}</span></div></td><td>3</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts">0</td></tr>`;
+  }).join('');
+  container.innerHTML += `<div class="group-card"><div class="group-head"><span class="group-letter">GRUPO ${g.letter}</span><span class="group-teams-flags">${g.teams.map(t=>FLAGS[t]||'').join('')}</span></div><table class="group-table"><thead><tr><th style="width:40%">Seleção</th><th title="Jogos">J</th><th title="Vitórias">V</th><th title="Empates">E</th><th title="Derrotas">D</th><th title="Gols Pró">GP</th><th title="Gols Contra">GC</th><th title="Pontos">Pts</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// CITIES & STADIUMS DATA
+// ═══════════════════════════════════════════════════════════════════
+const STADIUMS = [
+  { id:'metlife',   name:'MetLife Stadium',           city:'Nova York/NJ',       country:'EUA',    flag:'🇺🇸', emoji:'🏟️', capacity:82500,  games:8, photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/MetLife_Stadium_2014.jpg/800px-MetLife_Stadium_2014.jpg' },
+  { id:'sofi',      name:'SoFi Stadium',              city:'Los Angeles',        country:'EUA',    flag:'🇺🇸', emoji:'🏟️', capacity:70240,  games:7, photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/SoFi_Stadium_-_2020.jpg/800px-SoFi_Stadium_-_2020.jpg' },
+  { id:'att',       name:'AT&T Stadium',              city:'Arlington/Dallas',   country:'EUA',    flag:'🇺🇸', emoji:'🏟️', capacity:80000,  games:6, photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/AT%26T_Stadium_2018.jpg/800px-AT%26T_Stadium_2018.jpg' },
+  { id:'arrowhead', name:'Arrowhead Stadium',         city:'Kansas City',        country:'EUA',    flag:'🇺🇸', emoji:'🏟️', capacity:76416,  games:5, photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Arrowhead_Stadium_10-23-11.jpg/800px-Arrowhead_Stadium_10-23-11.jpg' },
+  { id:'hardrock',  name:'Hard Rock Stadium',         city:'Miami Gardens',      country:'EUA',    flag:'🇺🇸', emoji:'🏟️', capacity:65326,  games:8, photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Hard_Rock_Stadium_2016.jpg/800px-Hard_Rock_Stadium_2016.jpg' },
+  { id:'nrg',       name:'NRG Stadium',               city:'Houston',            country:'EUA',    flag:'🇺🇸', emoji:'🏟️', capacity:72220,  games:7, photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/NRGStadium2014.jpg/800px-NRGStadium2014.jpg' },
+  { id:'lfc',       name:'Lincoln Financial Field',   city:'Filadélfia',         country:'EUA',    flag:'🇺🇸', emoji:'🏟️', capacity:69328,  games:5, photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Lincoln_Financial_Field_2020.jpg/800px-Lincoln_Financial_Field_2020.jpg' },
+  { id:'gillette',  name:'Gillette Stadium',          city:'Boston',             country:'EUA',    flag:'🇺🇸', emoji:'🏟️', capacity:65878,  games:6, photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Gillette_Stadium_from_air_2016.jpg/800px-Gillette_Stadium_from_air_2016.jpg' },
+  { id:'levis',     name:"Levi's Stadium",            city:'São Francisco',      country:'EUA',    flag:'🇺🇸', emoji:'🏟️', capacity:68500,  games:6, photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Levi%27s_Stadium_during_a_game.jpg/800px-Levi%27s_Stadium_during_a_game.jpg' },
+  { id:'lumen',     name:'Lumen Field',               city:'Seattle',            country:'EUA',    flag:'🇺🇸', emoji:'🏟️', capacity:68740,  games:6, photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Lumen_Field_-_2021.jpg/800px-Lumen_Field_-_2021.jpg' },
+  { id:'mbenz',     name:'Mercedes-Benz Stadium',     city:'Atlanta',            country:'EUA',    flag:'🇺🇸', emoji:'🏟️', capacity:71000,  games:8, photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mercedes-Benz_Stadium_2018.jpg/800px-Mercedes-Benz_Stadium_2018.jpg' },
+  { id:'azteca',    name:'Estadio Azteca',            city:'Cidade do México',   country:'México', flag:'🇲🇽', emoji:'🏟️', capacity:87523,  games:5, photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Estadio_Azteca_2015.jpg/800px-Estadio_Azteca_2015.jpg' },
+  { id:'akron',     name:'Estadio Akron',             city:'Zapopan',            country:'México', flag:'🇲🇽', emoji:'🏟️', capacity:49850,  games:4, photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Estadio_Akron_2022.jpg/800px-Estadio_Akron_2022.jpg' },
+  { id:'bbva',      name:'Estadio BBVA',              city:'Monterrey',          country:'México', flag:'🇲🇽', emoji:'🏟️', capacity:53500,  games:4, photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Estadio_BBVA_Bancomer.jpg/800px-Estadio_BBVA_Bancomer.jpg' },
+  { id:'bmo',       name:'BMO Field',                 city:'Toronto',            country:'Canadá', flag:'🇨🇦', emoji:'🏟️', capacity:45736,  games:6, photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/BMO_Field_2021.jpg/800px-BMO_Field_2021.jpg' },
+  { id:'bcplace',   name:'BC Place',                  city:'Vancouver',          country:'Canadá', flag:'🇨🇦', emoji:'🏟️', capacity:54320,  games:6, photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/BC_Place_2011.jpg/800px-BC_Place_2011.jpg' },
+];
+
+const CITIES = [
+  { name:'Nova York/NJ',     country:'EUA',    flag:'🇺🇸', stadiumId:'metlife'  },
+  { name:'Los Angeles',      country:'EUA',    flag:'🇺🇸', stadiumId:'sofi'     },
+  { name:'Dallas/Arlington', country:'EUA',    flag:'🇺🇸', stadiumId:'att'      },
+  { name:'Kansas City',      country:'EUA',    flag:'🇺🇸', stadiumId:'arrowhead'},
+  { name:'Miami',            country:'EUA',    flag:'🇺🇸', stadiumId:'hardrock' },
+  { name:'Houston',          country:'EUA',    flag:'🇺🇸', stadiumId:'nrg'      },
+  { name:'Filadélfia',       country:'EUA',    flag:'🇺🇸', stadiumId:'lfc'      },
+  { name:'Boston',           country:'EUA',    flag:'🇺🇸', stadiumId:'gillette' },
+  { name:'São Francisco',    country:'EUA',    flag:'🇺🇸', stadiumId:'levis'    },
+  { name:'Seattle',          country:'EUA',    flag:'🇺🇸', stadiumId:'lumen'    },
+  { name:'Atlanta',          country:'EUA',    flag:'🇺🇸', stadiumId:'mbenz'    },
+  { name:'Cidade do México', country:'México', flag:'🇲🇽', stadiumId:'azteca'   },
+  { name:'Zapopan',          country:'México', flag:'🇲🇽', stadiumId:'akron'    },
+  { name:'Monterrey',        country:'México', flag:'🇲🇽', stadiumId:'bbva'     },
+  { name:'Toronto',          country:'Canadá', flag:'🇨🇦', stadiumId:'bmo'      },
+  { name:'Vancouver',        country:'Canadá', flag:'🇨🇦', stadiumId:'bcplace'  },
+];
+
+function getStadiumMatches(stadiumName) {
+  return MATCHES_CLEAN.filter(m => m[4] === stadiumName);
+}
+
+// Build Cities Grid
+const citiesGrid = document.getElementById('citiesGrid');
+CITIES.forEach(city => {
+  const st = STADIUMS.find(s => s.id === city.stadiumId);
+  const gamesCount = st ? getStadiumMatches(st.name).length : 0;
+  const div = document.createElement('div');
+  div.className = 'city-card';
+  div.innerHTML = `<div class="city-flag">${city.flag}</div><div class="city-name">${city.name}</div><div class="city-country">${city.country}</div><div class="city-games">⚽ ${gamesCount} jogos</div>`;
+  div.onclick = () => openCityModal(city);
+  citiesGrid.appendChild(div);
+});
+
+// Build Stadiums Grid
+const stadiumsGrid = document.getElementById('stadiumsGrid');
+STADIUMS.forEach(st => {
+  const matches = getStadiumMatches(st.name);
+  const div = document.createElement('div');
+  div.className = 'stadium-card';
+  div.innerHTML = `
+    <div class="stadium-photo-wrap">
+      <img src="${st.photo}" alt="${st.name}" class="stadium-photo" loading="lazy" onerror="this.parentElement.innerHTML='<div class=stadium-emoji-fallback>${st.emoji}</div>'">
+    </div>
+    <div class="stadium-info">
+      <div class="stadium-name">${st.name}</div>
+      <div class="stadium-location">${st.flag} ${st.city} · ${st.country}</div>
+      <div class="stadium-meta">
+        <span class="stadium-badge highlight">⚽ ${matches.length} jogos</span>
+        <span class="stadium-badge">👥 ${st.capacity.toLocaleString('pt-BR')}</span>
+      </div>
+    </div>`;
+  div.onclick = () => openStadiumModal(st);
+  stadiumsGrid.appendChild(div);
+});
+
+function openCityModal(city) {
+  const st = STADIUMS.find(s => s.id === city.stadiumId);
+  openStadiumModal(st, city.name);
+}
+
+function openStadiumModal(st, cityOverride) {
+  const matches = getStadiumMatches(st.name);
+  document.getElementById('modalStadiumEmoji').innerHTML = `<img src="${st.photo}" alt="${st.name}" style="width:100%;border-radius:8px;display:block;object-fit:cover;max-height:220px;" onerror="this.outerHTML='<div style=font-size:3.5rem;text-align:center>${st.emoji}</div>'">`;
+  document.getElementById('modalTitle').textContent = st.name;
+  document.getElementById('modalSub').textContent = `${st.flag} ${cityOverride || st.city} · ${st.country}`;
+  document.getElementById('modalStats').innerHTML = `
+    <div class="modal-stat"><div class="modal-stat-num">${matches.length}</div><div class="modal-stat-lbl">Jogos</div></div>
+    <div class="modal-stat"><div class="modal-stat-num">${(st.capacity/1000).toFixed(0)}K</div><div class="modal-stat-lbl">Capacidade</div></div>
+    <div class="modal-stat"><div class="modal-stat-num">${st.country.slice(0,3).toUpperCase()}</div><div class="modal-stat-lbl">País</div></div>
+  `;
+  document.getElementById('modalGames').innerHTML = matches.map(m => {
+    const d = new Date(m[1] + 'T12:00:00');
+    const dateStr = d.toLocaleDateString('pt-BR', { day:'2-digit', month:'short' });
+    return `<div class="modal-game-item"><span class="modal-game-title">${withFlags(m[0])}</span><div class="modal-game-meta"><div>${m[2]}h BRT</div><div>${dateStr}</div><div style="font-size:.65rem;color:var(--verde)">${m[7]}</div></div></div>`;
+  }).join('');
+  document.getElementById('cityModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('cityModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal('cityModal');
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// STATS PANEL – Brasil matches
+// ═══════════════════════════════════════════════════════════════════
+const BRASIL_MATCHES = MATCHES_CLEAN.filter(m => m[0].includes('Brasil') || m[0].includes('Escócia x Brasil'));
+const brasilList = document.getElementById('brasilMatchesList');
+BRASIL_MATCHES.forEach(m => {
+  const [title, date, time, ,, city] = m;
+  const d = new Date(date + 'T12:00:00');
+  const dateStr = d.toLocaleDateString('pt-BR', { day:'2-digit', month:'short' });
+  brasilList.innerHTML += `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(0,166,81,.06);border-radius:10px;border:1px solid rgba(0,166,81,.2)"><div><div style="font-size:.85rem;font-weight:600;color:var(--text1)">${withFlags(title)}</div><div style="font-size:.7rem;color:var(--text2);margin-top:2px">📍 ${city}</div></div><div style="text-align:right;flex-shrink:0;margin-left:10px"><div style="font-size:.8rem;font-weight:700;color:var(--verde)">${time}h</div><div style="font-size:.68rem;color:var(--text2)">${dateStr}</div></div></div>`;
+});
+
+// Stats live counters (placeholders – updated during the tournament)
+const now = new Date();
+const copaStart = new Date('2026-06-11T15:00:00-06:00');
+const copaEnd   = new Date('2026-07-19T20:00:00-04:00');
+const totalDays = (copaEnd - copaStart) / 86400000;
+const elapsed   = Math.max(0, Math.min(1, (now - copaStart) / (copaEnd - copaStart)));
+const played    = Math.round(104 * elapsed);
+document.getElementById('statsPlayed').textContent    = played;
+document.getElementById('statsRemaining').textContent = 104 - played;
+document.getElementById('statsGoals').textContent     = played > 0 ? (played * 2.7).toFixed(0) : '—';
+document.getElementById('statsAvgGoals').textContent  = played > 0 ? '2.7' : '—';
+document.getElementById('statsAttendance').textContent= played > 0 ? (played * 68000).toLocaleString('pt-BR') : '—';
+document.getElementById('statsYellow').textContent    = played > 0 ? (played * 3.1).toFixed(0) : '—';
+document.getElementById('statsRed').textContent       = played > 0 ? (played * 0.3).toFixed(0) : '—';
+// ═══════════════════════════════════════════════════════════════════
+// COMPARTILHAMENTO & CONTADOR
+// ═══════════════════════════════════════════════════════════════════
+let shareCount = parseInt(localStorage.getItem('copa26shares') || '0');
+
+function updateShareDisplay() {
+  const el = document.getElementById('shareCount');
+  const el2 = document.getElementById('shareCountInline');
+  if (el) { el.textContent = shareCount; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
+  if (el2) el2.textContent = shareCount;
+}
+updateShareDisplay();
+
+function shareProject(platform) {
+  const url = encodeURIComponent(location.href);
+  const text = encodeURIComponent('🏆 Portal completo da Copa do Mundo FIFA 2026 – agenda, grupos, estádios e muito mais! Confira:');
+  const urls = {
+    whatsapp: `https://wa.me/?text=${text}%20${url}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${url}`,
+  };
+  if (platform === 'copy') {
+    navigator.clipboard.writeText(location.href).then(() => {
+      const btn = document.getElementById('copyBtn');
+      const orig = btn.innerHTML;
+      btn.innerHTML = `<svg class="share-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copiado!`;
+      btn.style.background = 'rgba(0,166,81,.2)';
+      btn.style.borderColor = 'var(--verde)';
+      btn.style.color = 'var(--verde)';
+      setTimeout(() => { btn.innerHTML = orig; btn.style = ''; }, 2500);
+    }).catch(() => alert(location.href));
+  } else {
+    window.open(urls[platform], '_blank', 'noopener,noreferrer,width=600,height=500');
+  }
+  shareCount++;
+  localStorage.setItem('copa26shares', shareCount);
+  updateShareDisplay();
+}
+
+</script>
+</body>
+</html>
